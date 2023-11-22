@@ -47,11 +47,7 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-<<<<<<< HEAD
-          <OutputDirectory>..\..\..\..\..\..\..\</OutputDirectory>
-=======
           <OutputDirectory>..\</OutputDirectory>
->>>>>>> b677819 (streamlined project)
           <OutputName>Template</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>

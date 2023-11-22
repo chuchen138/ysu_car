@@ -1,5 +1,5 @@
-#ifndef __LED_H
-#define __LED_H
+#ifndef __KEY_BEEP_H
+#define __KEY_BEEP_H
 
 
 #endif 
