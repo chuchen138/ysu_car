@@ -11,7 +11,7 @@ int main()
 	LED_GPIO_Init();//gpio led初始化
 	while(1)
 	{
-        printf("Hello world!\r\n");
+        printf("Hello world!\r\n");//燕过留声
 		GPIO_ResetBits(GPIOC,GPIO_Pin_13);//输出低电平
         delay_ms(1000);
         GPIO_SetBits(GPIOC,GPIO_Pin_13);//
