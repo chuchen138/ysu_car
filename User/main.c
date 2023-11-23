@@ -4,7 +4,7 @@
 #include "sys.h"
 #include "delay.h"
 #include "usart.h"
-
+#include "xunguang.h"
 extern u8 key_flag;
 
 int main()
@@ -14,9 +14,12 @@ int main()
 	//LED_Init();//gpio led初始化
     BEEP_Init();
     KEY_Init();
+    XUNGUANG_Init();
+
 	while(1)
-	{
-        printf("status: %d \r\n", key_flag);
+	{   
+        printf("statusA5: %d \r\n", XUNGUANG2);
+        printf("statusB3: %d \r\n", XUNGUANG1);
         delay_ms(500);
 	}
 }
