@@ -182,6 +182,42 @@ void USART2_Config(u32 bound)
 	USART_Cmd(USART2, ENABLE);	    
 }
 
+u32 ysu_mode = 0;
+u8 ysu_flag = 0;
+u32 ysu_speed = 0;
+inline void Processing_received_data(u8 Res){
+	if(Res >='0' && Res <= '9'){
+		if(Res == '0'){
+			ysu_mode = MODE_STOP;
+		}else if(Res == '1'){
+			ysu_mode |= MODE_BLUETOOTH_HELP;
+		}else if(Res == '2'){
+			ysu_mode |= MODE_BLUETOOTH_CTRL;
+		}else if(Res == '3'){
+			ysu_mode |= MODE_TRACK;
+		}else if(Res == '4'){
+			ysu_mode |= MODE_OBSTACLE_AVOIDANCE;
+		}else if(Res == '5'){
+			ysu_mode |= MODE_INFRARED_REMOTE_COPNTROL;
+		}else if(Res == '6'){
+			ysu_mode |= MODE_PURSE_LIGHT;
+		}else if(Res == '7'){
+			ysu_mode |= MODE_ULTRASONIC_DISTANCE;
+		}else if(Res == '8'){
+			ysu_mode |= MODE_BATTERY_POWER;
+		}else if(Res == '9'){
+			ysu_mode |= MODE_DANCE;
+		}
+	}else{
+		if(Res == 'r'){
+			ysu_mode |= MODE_RED_LIGHT;
+		}else if(Res == 'g'){
+			ysu_mode |= MODE_GREEN_LIGHT;
+		}else if(Res == 'b'){
+			ysu_mode |= MODE_BLUE_LIGHT;
+		}
+	}
+}
 void USART2_IRQHandler(void)                	//串口2中断服务程序
 	{
 	u8 Res;
@@ -191,25 +227,26 @@ void USART2_IRQHandler(void)                	//串口2中断服务程序
 	if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
 		{
 		Res =USART_ReceiveData(USART2);	//读取接收到的数据
-		
-		if((USART2_RX_STA&0x8000)==0)//接收未完成
-			{
-			if(USART2_RX_STA&0x4000)//接收到了0x0d
-				{
-				if(Res!=0x0a)USART2_RX_STA=0;//接收错误,重新开始
-				else USART2_RX_STA|=0x8000;	//接收完成了 
-				}
-			else //还没收到0X0D
-				{	
-				if(Res==0x0d)USART2_RX_STA|=0x4000;
-				else
-					{
-					USART2_RX_BUF[USART2_RX_STA&0X3FFF]=Res ;
-					USART2_RX_STA++;
-					if(USART2_RX_STA>(USART2_REC_LEN-1))USART2_RX_STA=0;//接收数据错误,重新开始接收	  
-					}		 
-				}
-			}   		 
+		printf("Res = [%c], hex = [%#x].\r\n",Res,Res);
+		Processing_received_data(Res);
+//		if((USART2_RX_STA&0x8000)==0)//接收未完成
+//			{
+//			if(USART2_RX_STA&0x4000)//接收到了0x0d
+//				{
+//				if(Res!=0x0a)USART2_RX_STA=0;//接收错误,重新开始
+//				else USART2_RX_STA|=0x8000;	//接收完成了 
+//				}
+//			else //还没收到0X0D
+//				{	
+//				if(Res==0x0d)USART2_RX_STA|=0x4000;
+//				else
+//					{
+//					USART2_RX_BUF[USART2_RX_STA&0X3FFF]=Res ;
+//					USART2_RX_STA++;
+//					if(USART2_RX_STA>(USART2_REC_LEN-1))USART2_RX_STA=0;//接收数据错误,重新开始接收	  
+//					}		 
+//				}
+//			}   		 
      } 
 #if SYSTEM_SUPPORT_OS 	//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
 	OSIntExit();  											 
@@ -512,7 +549,6 @@ void USART5_IRQHandler(void)                	//串口5中断服务程序
 	if(USART_GetITStatus(UART5, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
 		{
 		Res =USART_ReceiveData(UART5);	//读取接收到的数据
-		
 		if((USART5_RX_STA&0x8000)==0)//接收未完成
 			{
 			if(USART5_RX_STA&0x4000)//接收到了0x0d
@@ -592,10 +628,10 @@ void Usart_SendStr(USART_TypeDef* pUSARTx, uint8_t *str)
 int fputc(int ch, FILE *f)
 {
 		/* 发送一个字节数据到串口 */
-		USART_SendData(USART1, (uint8_t) ch);
+		USART_SendData(USART2, (uint8_t) ch);
 		
 		/* 等待发送完毕 */
-		while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);		
+		while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET);		
 	
 		return (ch);
 }
@@ -611,12 +647,13 @@ int fgetc(FILE *f)
 }
 
 
-#if 0
+#if 1
 void Bluetooth(void)
 {
-	if(USART1_RX_STA&0x8000)			
+	if(USART2_RX_STA&0x8000)			
 	 {
-			switch(USART1_RX_BUF[0])
+		 printf("receive %c==\r\n",USART2_RX_BUF[0]);
+			switch(USART2_RX_BUF[0])
 			{				
 				case 'a': 
 						
@@ -729,7 +766,7 @@ void Bluetooth(void)
 						break;
 				
 			}
-			USART1_RX_STA=0;
+			USART2_RX_STA=0;
 	 }
 }
 #endif
