@@ -12,6 +12,11 @@ void LED_Init(void)
 	GPIO_InitStruct.GPIO_Speed= GPIO_Speed_50MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStruct);
 	GPIO_SetBits(GPIOC,GPIO_Pin_13);
+}
+
+
+void RGBLED_Init(void){
+    GPIO_InitTypeDef  GPIO_InitStruct;//gpio配置结构体
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
@@ -54,6 +59,9 @@ void LED_Init(void)
     TIM_SetCompare3(TIM3,100);
     TIM_SetCompare4(TIM3,100);
 }
+
+
+
 
 void set_redLED(u8 Compare){
     if(Compare >= 100)
