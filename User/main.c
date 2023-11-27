@@ -23,6 +23,7 @@ int main()
     SR04_Init();
 	while(1)
 	{   
+        BEEP_on(1000);
         u2printf("DISTANCE: %f \r\n",Get_SR04_Distance());
         printf("DISTANCE: %f \r\n",Get_SR04_Distance());
         //SG_90_SetDegree(0);

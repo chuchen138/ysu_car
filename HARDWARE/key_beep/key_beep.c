@@ -17,7 +17,7 @@ void BEEP_Init(void){
 
 void BEEP_on(u8 msec){
     u32 times = msec * 1000 / 80;
-    for(;times--;times > 0){
+    for(;times > 0;times--){
         delay_us(80);
 	    BEEP = ~BEEP;
     }
