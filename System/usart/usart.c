@@ -185,7 +185,7 @@ void USART2_Config(u32 bound)
 u32 ysu_mode = 0;
 u8 ysu_flag = 0;
 u32 ysu_speed = 0;
-inline void Processing_received_data(u8 Res){
+void Processing_received_data(u8 Res){
 	if(Res >='0' && Res <= '9'){
 		if(Res == '0'){
 			ysu_mode = MODE_STOP;
@@ -193,14 +193,19 @@ inline void Processing_received_data(u8 Res){
 			ysu_mode |= MODE_BLUETOOTH_HELP;
 		}else if(Res == '2'){
 			ysu_mode |= MODE_BLUETOOTH_CTRL;
+			ysu_flag = FLAG_WAITSETTING;
 		}else if(Res == '3'){
 			ysu_mode |= MODE_TRACK;
+			ysu_flag = FLAG_WAITSETTING;
 		}else if(Res == '4'){
 			ysu_mode |= MODE_OBSTACLE_AVOIDANCE;
+			ysu_flag = FLAG_WAITSETTING;
 		}else if(Res == '5'){
 			ysu_mode |= MODE_INFRARED_REMOTE_COPNTROL;
+			ysu_flag = FLAG_WAITSETTING;
 		}else if(Res == '6'){
 			ysu_mode |= MODE_PURSE_LIGHT;
+			ysu_flag = FLAG_WAITSETTING;
 		}else if(Res == '7'){
 			ysu_mode |= MODE_ULTRASONIC_DISTANCE;
 		}else if(Res == '8'){
