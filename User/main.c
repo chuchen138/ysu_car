@@ -9,7 +9,18 @@ u8 times = 0;
 int main(){   
 	car_speed = 300;
     bsp_init();
-
+//	while(1){
+//			left(500);
+//		delay_ms(650);
+//		right(500);
+//		delay_ms(100);
+//		
+//		stop();
+//		delay_ms(1000);
+//		delay_ms(1000);
+//		delay_ms(1000);
+//		delay_ms(1000);
+//	}
     while(1)
     {   
         if(car_flag == FLAG_WAITSETTING)
@@ -44,7 +55,7 @@ int main(){
         while(car_flag == FLAG_OK && (car_mode & MODE_TRACK))
         { // 循迹模式
              
-            BSP_IR_Trace(300,0);
+            BSP_IR_Trace(350,0);
             if((car_mode| MODE_TRACK) != MODE_TRACK)
             {
                 Other_Mode_Setting();
@@ -86,7 +97,8 @@ int main(){
         }
         while(car_flag == FLAG_OK && (car_mode & MODE_DANCE))
         {// 舞蹈模式
-            printf("MODE_DANCE\r\n");
+            //printf("MODE_DANCE\r\n");
+			BSP_Dance(300, 0);
             if((car_mode| MODE_DANCE) != MODE_DANCE)
             {
                 Other_Mode_Setting();

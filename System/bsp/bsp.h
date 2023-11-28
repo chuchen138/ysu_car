@@ -27,5 +27,5 @@ void Other_BLUETOOTH_Ctrl_Mode_Setting(void);
 void BSP_Obstacle_Avoidance(u32 speed,float upDist,float minDist);
 void BSP_Purse_Light(void);
 void BSP_IR_Trace(int speed, int l_r_speed);
-void BSP_Dance(void);
+void BSP_Dance(int speed, int l_r_speed);
 #endif 

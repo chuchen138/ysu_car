@@ -150,7 +150,7 @@ void Processing_received_data(u8 Res){
 			car_mode = MODE_INFRARED_REMOTE_COPNTROL;
 			car_flag = FLAG_WAITSETTING;
 		}else if(Res == '6'){
-			car_mode |= MODE_PURSE_LIGHT;
+			car_mode = MODE_PURSE_LIGHT;
 			car_flag = FLAG_WAITSETTING;
 		}else if(Res == '7'){
 			car_mode |= MODE_ULTRASONIC_DISTANCE;
@@ -435,5 +435,54 @@ u2printf("two\r\n");
 }*/
 
 
-void BSP_Dance(void){
+void BSP_Dance(int speed, int l_r_speed){
+	int leftAvoid = avoid_left;
+	int rightAvoid = avoid_right;
+	
+	if(avoid_left == HAVE_OBJ && avoid_right == HAVE_OBJ){
+		stop();
+		set_speed(speed,speed);
+		left(500);
+		delay_ms(650);
+		right(500);
+		delay_ms(100);
+		return;
+	}
+	//左右侧中间都检测到，直行
+	 //u2printf("MODE_TRACK\r\n");
+    if(trac_right1==1&&trac_left1==1)
+    {
+        set_speed(speed,speed);
+        forward();
+    }
+    //右侧中间检测到，右转
+    else if(trac_right1==1&&trac_left1==0)
+    {	set_speed( speed,l_r_speed);
+		forward();
+        //set_speed( l_r_speed,speed);
+        //right(l_r_speed);
+    }
+    //左侧中间检测到，左转
+    else if(trac_right1==0&&trac_left1==1)
+    {	set_speed( l_r_speed,speed);
+		forward();
+        //set_speed(speed,l_r_speed);
+    }
+    //左侧中间和最左侧同时检测到，即左转直角弯，一直左转直到最左侧检测不到
+    else if(trac_left2==1&&trac_left1==1&&trac_right2==0)
+    {	stop();
+		//set_speed( l_r_speed,speed);
+		left(300);
+    }
+    //右侧中间和最右侧同时检测到，即右转直角弯，一直右转直到最右侧检测不到
+    else if(trac_right2==1&&trac_right1==1&&trac_left2==0)
+    {	stop();
+		right(300);
+    }
+    //如果同时检测不到则后退
+    else if(trac_right2==1&&trac_right1==1&&trac_left1==1&&trac_left2==1)
+    {
+        stop();
+		//backward();
+    }
 }
