@@ -12,7 +12,10 @@
 #include "sr_04.h"
 #include "bluetooth_wifi.h"
 #include "motor.h"
-
+#include "ir_avoid.h"
+#include "ir_trac.h"
+#include "ir_yaokong.h"
+#include "adc.h"
 
 void bsp_init(void);
 void wait_for_setting(void);
@@ -20,5 +23,8 @@ void Other_Mode_Setting(void);
 void Other_BLUETOOTH_Ctrl_Mode_Setting(void);
 
 
+//void BSP_Obstacle_Avoidance(u32 speed,float upDist,float minDist);
 void BSP_Obstacle_Avoidance(u32 speed,float upDist,float minDist);
+void BSP_Purse_Light(void);
+void BSP_IR_Trace(int speed, int l_r_speed);
 #endif 

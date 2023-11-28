@@ -62,6 +62,9 @@ void pwm_init()
 	TIM4->CCR1 = 0;//设置输出比较值
 	TIM4->CCR2 = 0;
 }
+
+
+
 /** *************************
   * @用途  小车前进函数
   * @参数  int 通过调整占空比
@@ -70,10 +73,21 @@ void pwm_init()
   * @返回值 void
 	* @注:需要时直接调用
  ** *************************/
-void forward(int speed)
+void set_speed(int leftspeed,int rightspeed){
+    TIM_SetCompare1(TIM4, leftspeed);
+	TIM_SetCompare2(TIM4, rightspeed);
+}
+
+
+
+/** *************************
+  * @用途  小车前进函数
+  * @参数  
+  * @返回值 void
+	* @注:需要时直接调用
+ ** *************************/
+void forward(void)
 {
-	TIM_SetCompare1(TIM4, speed);
-	TIM_SetCompare2(TIM4, speed);
 	AIN1=1;
 	AIN2=0;
 	BIN1=1;
@@ -81,16 +95,12 @@ void forward(int speed)
 }
 /** *************************
   * @用途  小车后退函数
-  * @参数  int 通过调整占空比
-					 控制速度，speed范围0-1000
-					 占空比speed/1000
+  * @参数  
   * @返回值 void
 	* @注:需要时直接调用
  ** *************************/
-void backward(int speed)
+void backward(void)
 {
-	TIM_SetCompare1(TIM4, speed);
-	TIM_SetCompare2(TIM4, speed);
 	AIN1=0;
 	AIN2=1;
 	BIN1=0;

@@ -5,6 +5,7 @@ extern u8 car_flag;  // 是否确定
 //     car_mode
 extern u32 car_mode; // 不同的模式
 extern u32 car_speed;
+u8 times = 0;
 int main()
 {   car_speed = 300;
     bsp_init();
@@ -16,14 +17,20 @@ int main()
         }
         while(car_mode == MODE_STOP)
         {
-            u2printf("MODE_STOP\r\n");
+            if(times == 15 + 1){
+                u2printf("MODE_STOP\r\n");
+                times = 0;
+            }
             stop();
+            Other_Mode_Setting();
             delay_ms(1000);
+            times++;
         }
         while(car_flag == FLAG_OK && (car_mode & MODE_BLUETOOTH_CTRL))
         {
             // 蓝牙控制
-            u2printf("MODE_BLUETOOTH_CTRL\r\n");
+            //u2printf("MODE_BLUETOOTH_CTRL\r\n");
+            set_speed(400,300);
             //
             //
             if((car_mode| MODE_BLUETOOTH_CTRL) != MODE_BLUETOOTH_CTRL)
@@ -35,8 +42,8 @@ int main()
         }
         while(car_flag == FLAG_OK && (car_mode & MODE_TRACK))
         { // 循迹模式
-            u2printf("MODE_TRACK\r\n");
-            
+             
+            BSP_IR_Trace(300,0);
             if((car_mode| MODE_TRACK) != MODE_TRACK)
             {
                 Other_Mode_Setting();
@@ -46,14 +53,14 @@ int main()
         while(car_flag == FLAG_OK && (car_mode & MODE_OBSTACLE_AVOIDANCE))
         {    // 红外加超声波避障
             //printf("MODE_OBSTACLE_AVOIDANCE\r\n");
-			BSP_Obstacle_Avoidance(car_speed,20,15);
+			BSP_Obstacle_Avoidance(car_speed,25,10);
 			//forward(car_speed);
             if((car_mode| MODE_OBSTACLE_AVOIDANCE) != MODE_OBSTACLE_AVOIDANCE)
             {
-				printf("\r\n");
                 Other_Mode_Setting();
             }
             //delay_ms(1000);
+			//delay_ms(1000);
         }
         
         while(car_flag == FLAG_OK && (car_mode & MODE_INFRARED_REMOTE_COPNTROL))
@@ -67,7 +74,8 @@ int main()
         }
         while(car_flag == FLAG_OK && (car_mode & MODE_PURSE_LIGHT))
         { // 追光模式
-            printf("MODE_PURSE_LIGHT\r\n");
+            //printf("MODE_PURSE_LIGHT\r\n");
+            BSP_Purse_Light();
             if((car_mode| MODE_PURSE_LIGHT) != MODE_PURSE_LIGHT)
             {
                 Other_Mode_Setting();
