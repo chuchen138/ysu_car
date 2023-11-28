@@ -6,9 +6,10 @@ extern u8 car_flag;  // 是否确定
 extern u32 car_mode; // 不同的模式
 extern u32 car_speed;
 u8 times = 0;
-int main()
-{   car_speed = 300;
+int main(){   
+	car_speed = 300;
     bsp_init();
+
     while(1)
     {   
         if(car_flag == FLAG_WAITSETTING)
@@ -65,7 +66,8 @@ int main()
         
         while(car_flag == FLAG_OK && (car_mode & MODE_INFRARED_REMOTE_COPNTROL))
         { // 红外遥控
-            printf("MODE_INFRARED_REMOTE_COPNTROL\r\n");
+            //u2printf("MODE_INFRARED_REMOTE_COPNTROL\r\n");
+			ir_decode();
             if((car_mode| MODE_INFRARED_REMOTE_COPNTROL) != MODE_INFRARED_REMOTE_COPNTROL)
             {
                 Other_Mode_Setting();

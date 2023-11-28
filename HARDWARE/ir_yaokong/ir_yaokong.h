@@ -4,6 +4,7 @@
 #include "delay.h"
 #include "usart.h"
 #include "motor.h"
+#include "led.h"
 #define IR_IN PAin(1)
 void ir_yaokong_init(void);//红外遥控初始化函数，调用外部中断PA1触发
 void ir_decode(void);//红外键值处理函数

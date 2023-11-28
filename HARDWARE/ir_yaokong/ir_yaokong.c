@@ -168,6 +168,9 @@ void ir_decode()
         break;        
         case 2://遥控键值+
 					/*接收到对应键值后自定义程序*/
+			set_redLED(0);
+			set_greenLED(100);
+			set_blueLED(0);
           //printf("\r\n key_val=%d \r\n",key_val);
           //printf("\r\n + \r\n");
         break;    
@@ -177,16 +180,25 @@ void ir_decode()
           //printf("\r\n RETURN \r\n");
         break;  
         case 224://遥控键值|<<
+			set_redLED(0);
+			set_greenLED(0);
+			set_blueLED(100);
           //printf("\r\n key_val=%d \r\n",key_val);
          //printf("\r\n |<< \r\n");
         break;        
         case 168://遥控键值|>
 					/*接收到对应键值后自定义程序*/
+			set_redLED(100);
+			set_greenLED(0);
+			set_blueLED(0);
           //printf("\r\n key_val=%d \r\n",key_val);
           //printf("\r\n > \r\n");
         break;        
         case 144://遥控键值>>|
 					/*接收到对应键值后自定义程序*/
+			set_redLED(100);
+			set_greenLED(100);
+			set_blueLED(0);
           //printf("\r\n key_val=%d \r\n",key_val);
           //printf("\r\n >>| \r\n");
         break;
@@ -196,6 +208,9 @@ void ir_decode()
           //printf("\r\n 0 \r\n");
         break;
         case 152://遥控键值-
+			set_redLED(100);
+			set_greenLED(0);
+			set_blueLED(100);
           //printf("\r\n key_val=%d \r\n",key_val);
           //printf("\r\n - \r\n");
         break;
@@ -212,6 +227,8 @@ void ir_decode()
         case 24://遥控键值2
 					/*接收到对应键值后自定义程序*/
 					//forward(1000);
+			set_speed(500,500);
+			forward();
           //printf("\r\n key_val=%d \r\n",key_val);
           //printf("\r\n 2 \r\n");
         break;       
@@ -222,19 +239,19 @@ void ir_decode()
         break;        
         case 16://遥控键值4
 					/*接收到对应键值后自定义程序*/
-					//left(500);
+					left(300);
           //printf("\r\n key_val=%d \r\n",key_val);
           //printf("\r\n 4 \r\n");
         break;    
         case 56://遥控键值5
 					/*接收到对应键值后自定义程序*/
-					//stop();
+					stop();
           //printf("\r\n key_val=%d \r\n",key_val);
           //printf("\r\n 5 \r\n");
         break;      
         case 90://遥控键值6
 					/*接收到对应键值后自定义程序*/
-					//right(500);
+				right(300);
           //printf("\r\n key_val=%d \r\n",key_val);
           //printf("\r\n 6 \r\n");
         break;        
@@ -246,6 +263,8 @@ void ir_decode()
         case 74://遥控键值8
 					/*接收到对应键值后自定义程序*/
 					//backward(1000);
+			set_speed(500,500);
+			backward();
           //printf("\r\n key_val=%d \r\n",key_val);
           //printf("\r\n 8 \r\n");
         break;

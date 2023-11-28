@@ -19,7 +19,7 @@ void bsp_init(void){
 	
 	IRTRAC_GPIO_Init();
 	IRAVOID_GPIO_Init();
-    
+    ir_yaokong_init();
 }
 
 
@@ -39,28 +39,40 @@ void wait_for_setting(void){
 
 void Other_Mode_Setting(void){
 	if(car_mode & MODE_BLUETOOTH_HELP){
-		u2printf(" \
-			MODE_STOP=0,\
-			MODE_HELP=1<<0,\
-			MODE_BLUETOOTH_HELP=1<<1,\
-			MODE_BLUETOOTH_CTRL=1<<2,\
-			MODE_TRACK = 1<<3,\
-			MODE_OBSTACLE_AVOIDANCE = 1<<4,\
-			MODE_INFRARED_REMOTE_COPNTROL=1<<5,\
-			MODE_PURSE_LIGHT = 1<<6,\
-			MODE_ULTRASONIC_DISTANCE=1<<7,\
-			MODE_BATTERY_POWER=1<<8,\
-			MODE_DANCE = 1<<9,\
-			\
-			MODE_RED_LIGHT = 1<<13,\
-			MODE_GREEN_LIGHT = 1<<14,\
-			MODE_BLUE_LIGHT = 1<<15,\
-			\
-			MODE_ALL_HIGHEST_SPEED = 1<<20,\
-			MODE_MAXIMUM_SPEED = 1<<21,\
-			MODE_GENERAL_SPEED = 1<<22,\
-			MODE_MINIMUM_SPEED = 1<<23,\
-		");
+		u2printf(" MODE_STOP=0,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_HELP=1,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_BLUETOOTH_CTRL=2,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_TRACK = 3,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_OBSTACLE_AVOIDANCE = 4,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_INFRARED_REMOTE_COPNTROL=5,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_PURSE_LIGHT = 6,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_ULTRASONIC_DISTANCE=7,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_BATTERY_POWER=8,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_DANCE = ??9,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_RED_LIGHT = r,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_GREEN_LIGHT = g,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_BLUE_LIGHT = b,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_ALL_HIGHEST_SPEED = A,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_MAXIMUM_SPEED = B,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_GENERAL_SPEED = C,\r\n");
+		delay_ms(50);
+		u2printf(" MODE_MINIMUM_SPEED = D,\r\n");
+		delay_ms(50);
 		car_mode &= ~(u32)MODE_BLUETOOTH_HELP;
 	}else if(car_mode & MODE_ULTRASONIC_DISTANCE){
 
@@ -69,19 +81,26 @@ void Other_Mode_Setting(void){
 		car_mode &= ~(u32)MODE_ULTRASONIC_DISTANCE; 
 	}else if(car_mode & MODE_BATTERY_POWER){
 
-		u2printf("MODE_BATTERY_POWER \r\n\
-        Battery Voltage: [%0.2f] V \r\n\
-        Battery Voltage(corrected): [%0.2f] V \r\n",Get_ADC(),Get_ADC_Average(5));
+		u2printf("MODE_BATTERY_POWER \r\n Battery Voltage: [%0.2f] V \r\n",Get_ADC_Average(5));
 
 		car_mode &= ~(u32)MODE_BATTERY_POWER;
 	}else if(car_mode & MODE_RED_LIGHT){
-		printf("MODE_RED_LIGHT\r\n");
+		u2printf("MODE_RED_LIGHT\r\n");
+		set_redLED(0);
+		set_greenLED(100);
+		set_blueLED(0);
 		car_mode &= ~(u32)MODE_RED_LIGHT;
 	}else if(car_mode & MODE_GREEN_LIGHT){
-		printf("MODE_GREEN_LIGHT\r\n");
+		set_redLED(0);
+		set_greenLED(100);
+		set_blueLED(0);
+		u2printf("MODE_GREEN_LIGHT\r\n");
 		car_mode &= ~(u32)MODE_GREEN_LIGHT;
 	}else if(car_mode & MODE_BLUE_LIGHT){
-		printf("MODE_BLUE_LIGHT\r\n");
+		set_redLED(0);
+		set_greenLED(0);
+		set_blueLED(100);
+		u2printf("MODE_BLUE_LIGHT\r\n");
 		car_mode &= ~(u32)MODE_BLUE_LIGHT;
 	}
 }
@@ -180,11 +199,23 @@ void EXTI9_5_IRQHandler(void){
 
 }
 
-/*
+#define HAVE_OBJ 0 
+#define NOT_HAVE_OBJ 1
 void BSP_Obstacle_Avoidance(u32 speed,float upDist,float minDist){
     float dist,dist_0,dist_180;
     SG_90_SetDegree(90);
 	//stop();
+	int leftAvoid = avoid_left;
+	int rightAvoid = avoid_right;
+	
+	if(avoid_left == HAVE_OBJ && avoid_right == HAVE_OBJ){
+		stop();
+		set_speed(speed,speed);
+		backward();
+		delay_ms(500);
+		goto next;
+	}
+	
     dist = Get_SR04_Distance();
 	u2printf("up distance : %0.2f.\r\n", dist);
     if (dist >= upDist){
@@ -193,7 +224,7 @@ void BSP_Obstacle_Avoidance(u32 speed,float upDist,float minDist){
 		return;
 	}
 	else if (dist <= upDist){
-        stop();
+next:   stop();
         SG_90_SetDegree(0);
         delay_ms(800);
         dist_0 = Get_SR04_Distance();
@@ -218,7 +249,7 @@ void BSP_Obstacle_Avoidance(u32 speed,float upDist,float minDist){
             return;
         }
     }
-}*/
+}
 
 
 
@@ -314,7 +345,7 @@ void BSP_Purse_Light(void){
    > 如果舵机左右距离都小于距离范围，后退
 4. 如果距离在范围中间，左右都为1，继续前进
 5. 如果距离小于范围，后退。再舵机控制
-*/
+*//*
 void BSP_Obstacle_Avoidance(u32 speed,float upDist,float minDist){
     float dist,dist_0,dist_180;
 	int LeftSensorValue, RightSensorValue = 0;
@@ -401,5 +432,8 @@ u2printf("two\r\n");
             return;
         }
     }
-}
+}*/
 
+
+void BSP_Dance(void){
+}
